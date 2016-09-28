@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo 'Looking for duplicate IP addresses using arp-scan ...'
+
+# scan for duplicate ARP responses
+arp-scan -l | sort -V | grep -B1 -F '(DUP: '
+
+# invert return code (grep returns 0 when it finds a match)
+if [[ "$?" -eq "0" ]]; then
+	echo
+	echo 'You have duplicates IP addresses on your network :-('
+	exit 1
+else
+	echo 'No duplicates found! You have a healthy network!'
+	exit 0
+fi
